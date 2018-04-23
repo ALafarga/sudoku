@@ -1,6 +1,6 @@
 public class Casilla{
 
-    private int valor;
+    private int valor; //Momment
     private boolean inicial,
             utilizado;
 
