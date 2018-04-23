@@ -86,7 +86,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 
         //Agrega botones
         Panel botonera = new Panel();
-        botonera.setLayout(new GridLayout(2, 2));
+        botonera.setLayout(new GridLayout(3, 2));
 
         Panel botonera1=new Panel();
         botonera1.setLayout(new GridLayout(1,1));
@@ -99,13 +99,18 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
         Button selectJ = new Button("Seleccionar Juego");
         Button reloadJ = new Button("Reiniciar Juego");
         Button deshacer = new Button("Deshacer");
+        Button resolver = new Button("resolver");
+        Button parar = new Button("parar");
+        
 
         botonera.add(selectJ);
         botonera.add(reloadJ);
         botonera.add(salvarJ);
         botonera.add(cargarJ);
-
+        botonera.add(resolver);
+        botonera.add(parar);
         botonera1.add(deshacer);
+        
         aux.add(botonera1,BorderLayout.NORTH);
         aux.add(botonera, BorderLayout.SOUTH);
 
