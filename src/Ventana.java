@@ -1,6 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.JOptionPane;
+
+import com.sun.corba.se.spi.orbutil.fsm.Action;
+import com.sun.corba.se.spi.orbutil.fsm.FSM;
+import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 public class Ventana extends Frame implements WindowListener, ActionListener {
     private Canvas lienzo;
@@ -99,8 +104,8 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
         Button selectJ = new Button("Seleccionar Juego");
         Button reloadJ = new Button("Reiniciar Juego");
         Button deshacer = new Button("Deshacer");
-        Button resolver = new Button("resolver");
-        Button parar = new Button("parar");
+        Button resolver = new Button("Resolver");
+        Button parar = new Button("Rarar");
         
 
         botonera.add(selectJ);
@@ -133,6 +138,20 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
         selectJ.addActionListener(this);
         reloadJ.addActionListener(this);
         deshacer.addActionListener(this);
+        
+        resolver.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//Agregar metodo resolver
+			}
+		});
+        
+        parar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//Agregar metodo parar
+			}
+		});
 
         //Agrega Funcionalidad para cerrar desde titulo *No Modificar*
         this.addWindowListener(new WindowAdapter(){
