@@ -31,7 +31,7 @@ public class Casilla{
     public boolean setValor(int valor,boolean x){
         this.valor=valor;
         this.utilizado=true;
-        this.inicial = x;
+        this.inicial = x;//comentario
         return true;
     }
 
