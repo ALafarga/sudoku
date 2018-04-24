@@ -135,12 +135,13 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		selectJ.addActionListener(this);
 		reloadJ.addActionListener(this);
 		deshacer.addActionListener(this);
-
+		
 		resolver.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Agregar metodo resolver
 				auto = true;
+				tablero.resolver(tablero.getMatriz());
 			}
 		});
 
@@ -229,6 +230,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			this.lienzo.disable();
 		}
 	}
+	
 
 	// Recibe datos del mouse
 	public boolean setValor(int fila, int columna, int valor) {
@@ -250,6 +252,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 					this.extiGame(); // Salir del juego?
 				}
 			}
+			return true;
 		} else {
 			if (this.auto == false) {
 				int x = JOptionPane.showConfirmDialog(this, "Perdiste! Volver a Intentar?", "Aviso", JOptionPane.YES_NO_OPTION);
@@ -270,10 +273,9 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 					this.extiGame(); // Salir del juego ?
 				}
 			} else {
-				
 			}
+			return false;
 		}
-		return false;
 	}
 
 	public static void main(String[] args) {
