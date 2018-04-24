@@ -28,7 +28,31 @@ public class Tablero {
         }
         this.Open("Juego 1");
     }
-
+    
+    public boolean resolver(Casilla[][] tablero){
+    	for(int row=0; row<9; row++){
+    		for(int col=0; col<9; col++){
+    			System.out.print("Checking ["+row+"] ["+col+"]: ");
+    			if(!matriz[row][col].isUtilizado() && !matriz[row][col].isInicial()){
+    				for(int k=0; k<=9; k++){
+    					System.out.print("put a "+k+" ... ");
+    					boolean valid = this.frame.setValor(row, col, k);
+    					if(valid && resolver(tablero)){
+    						System.out.println("Correct!");
+    						return true;
+    					}
+    					System.out.println("Incorrect");
+    					this.frame.clearValor(row, col);
+    				}
+    				return false;
+    			} else {
+    				System.out.println("Initial value or already solved");
+    			}
+    		}
+    	}
+    	return true;
+    }
+    
     public boolean setValor(int fila, int columna, int valor){
         Integer [] a= new Integer [2];
         a[0]=fila;
@@ -316,5 +340,13 @@ public class Tablero {
 		System.out.println(tab.matriz[1][8].isUtilizado());
 		System.out.println(tab.matriz[1][2].isUtilizado());
 	}*/
+
+	public Casilla[][] getMatriz() {
+		return matriz;
+	}
+
+	public void setMatriz(Casilla[][] matriz) {
+		this.matriz = matriz;
+	}
 
 }
