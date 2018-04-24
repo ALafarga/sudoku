@@ -1,6 +1,7 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
+import ListaEnlazada.ListaVaciaException;
 
 import ListaEnlazada.StackLE;
 
@@ -60,8 +61,10 @@ public class Tablero {
         }
     }
 
-    public void deshacer()
+    public void deshacer () throws ListaVaciaException
     {
+        try{
+
         int aux1 = this.stack.top()[0];
         //System.out.println(this.stack.top()[0]+"");
         int aux2 = this.stack.top()[1];
@@ -73,6 +76,10 @@ public class Tablero {
         //System.out.println(stack+"");
         //System.out.println(this.stack.top()[0]+"");
 
+        }catch(ListaVaciaException e){
+            this.frame.showMessage("Invalido", "No hay registro de movimientos previos");
+            throw new ListaVaciaException("No hay registro de movimientos previos");
+        }
     }
 
     public void clearValor(int fila, int columna){
