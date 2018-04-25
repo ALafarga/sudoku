@@ -1,24 +1,67 @@
+/**
+ *  Copyright (c) 2018, Lafarga and/or Gonzalez. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  L%G designates this
+ * particular file as subject to the "EstructsClass".
+ *
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details.
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Este proyecto es un juego de Sudoku que precarga los juegos de un archivo txt
+ * donde cada línea es un número dentro de una casiila en el juego de Sudoku
+ * que tiene el atributo de ser un valor inicial (no ingresado por el jugador)
+ * y entonces la lógica de cada la línea debe consistir de 4 palabras separadas
+ * por una "," donde se indica la fila y columna del numero/valor que va
+ * en esa casilla y si es inicial o no lo es.
+ *      [fila],[columna],[valor],[inicial]
+ * El atributo inicial es para que no pueda ser cambiado.
+ *
+ * Please contact Lafarga or Mijares if you need additional information or
+ * have any questions.
+ */
+
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.JOptionPane;
 
-import com.sun.corba.se.spi.orbutil.fsm.Action;
-import com.sun.corba.se.spi.orbutil.fsm.FSM;
-import com.sun.corba.se.spi.orbutil.fsm.Input;
+//import com.sun.corba.se.spi.orbutil.fsm.Action;
+//import com.sun.corba.se.spi.orbutil.fsm.FSM;
+//import com.sun.corba.se.spi.orbutil.fsm.Input;
+
+/**
+ *  Clase principal del proyecto
+ *
+ * @author Arturo Lafarga
+ * @author Miguel Elias Gonzalez
+ */
 
 public class Ventana extends Frame implements WindowListener, ActionListener {
 	private Canvas lienzo;
 	private Tablero tablero;
 	private boolean auto = false;
 
+    /**
+     * Constructor
+     * Inicializa los cuadros/casillas
+     */
 	public Ventana() {
 		this.tablero = new Tablero(this);
 		this.setTitle("Sudoku Extremo");
 		this.lienzo = new Canvas() {
 			public void paint(Graphics g) {
-				int aux = 150;
-				int aux2 = 50;
+				int aux = 150;  //Lineas de separacion general
+				int aux2 = 50;  //Lineas de separacion entre secciones
 
 				// Dibuja los cuadros
 				g.setColor(new Color(250, 255, 253));
@@ -78,8 +121,8 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 					}
 					px = 20;
 					py += 50;
-				}// End dibuja
-			}
+				}
+			}// End dibuja
 
 		};// End Lienzo
 
@@ -90,11 +133,12 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 
 		// Agrega botones
 		Panel botonera = new Panel();
-		botonera.setLayout(new GridLayout(3, 2));
+		botonera.setLayout(new GridLayout(3, 2));   //Botones
 
 		Panel botonera1 = new Panel();
-		botonera1.setLayout(new GridLayout(1, 1));
+		botonera1.setLayout(new GridLayout(1, 1));  //Boton deshacer
 
+        //Panel auxiliar que contiene los dos paneles de los botonoes
 		Panel aux = new Panel();
 		aux.setLayout(new BorderLayout());
 
@@ -104,7 +148,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		Button reloadJ = new Button("Reiniciar Juego");
 		Button deshacer = new Button("Deshacer");
 		Button resolver = new Button("Resolver");
-		Button parar = new Button("Rarar");
+		Button parar = new Button("Parar");
 
 		botonera.add(selectJ);
 		botonera.add(reloadJ);
@@ -112,6 +156,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		botonera.add(cargarJ);
 		botonera.add(resolver);
 		botonera.add(parar);
+
 		botonera1.add(deshacer);
 
 		aux.add(botonera1, BorderLayout.NORTH);
@@ -139,7 +184,6 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		resolver.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Agregar metodo resolver
 				auto = true;
 				tablero.resolver(tablero.getMatriz());
 			}
@@ -158,9 +202,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			public void windowClosing(WindowEvent evt) {
 				System.exit(0);
 			}
-		}
-
-		);// Lienzo End
+		});
 
 	}// Ventana End
 
@@ -200,16 +242,32 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		}
 	}
 
+    /**
+     * Muestra un drop down list con los juegos disponibles
+     * @return Object JOptionPanel
+     */
 	public Object showGames() {
 		Object[] juegosdisponibles = { "Juego 1", "Juego 2", "Juego 3" };
 		Object juegoe = JOptionPane.showInputDialog(null, "Escoje un juego", "Cargar juego nuevo", JOptionPane.INFORMATION_MESSAGE, null, juegosdisponibles, juegosdisponibles[0]);
 		return juegoe;
 	}
 
+    /**
+     *  Metodo facilitador para mostrar mensajes
+     *
+     * @param title Titulo de la ventana de mensaje
+     * @param message Mensaje a mostrar
+     */
 	public void showMessage(String title, String message) {
 		JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
+    /**
+     * //////////////////////////////////////////////////////COMO SE LLAMA ESTO todo ////////
+     * Limpia el valor de la casilla
+     * @param fila de la casilla a limpiar
+     * @param columna de la casilla a limpiar
+     */
 	public void clearValor(int fila, int columna) {
 		this.tablero.clearValor(fila, columna);
 		this.lienzo.repaint();
@@ -220,6 +278,9 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		this.lienzo.repaint();
 	}
 
+    /**
+     * Exit Game
+     */
 	public void extiGame() {
 		int z = JOptionPane.showConfirmDialog(this, "Desea salir del juego?", "Aviso", JOptionPane.YES_NO_OPTION);
 		if (z == 0) {
@@ -230,9 +291,15 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			this.lienzo.disable();
 		}
 	}
-	
 
-	// Recibe datos del mouse
+    /**
+     * Recibe datos del mouse
+     *
+     * @param fila de la casilla a setear
+     * @param columna de la casilla a setear
+     * @param valor de la casilla a setear
+     * @return
+     */
 	public boolean setValor(int fila, int columna, int valor) {
 		if (this.tablero.setValor(fila, columna, valor)) {
 			this.lienzo.repaint();
@@ -284,7 +351,6 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
