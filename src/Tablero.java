@@ -29,31 +29,43 @@ public class Tablero {
         }
         this.Open("Juego 1");
     }
-    
+
+    /**
+     *
+     * @param tablero
+     * @return
+     */
     public boolean resolver(Casilla[][] tablero){
     	for(int row=0; row<9; row++){
     		for(int col=0; col<9; col++){
-    			System.out.print("Checking ["+row+"] ["+col+"]: ");
+    			System.out.print("Comprobando ["+row+"] ["+col+"]: ");
     			if(!matriz[row][col].isUtilizado() && !matriz[row][col].isInicial()){
     				for(int k=0; k<=9; k++){
-    					System.out.print("put a "+k+" ... ");
+    					System.out.print("pon a "+k+" ... ");
     					boolean valid = this.frame.setValor(row, col, k);
     					if(valid && resolver(tablero)){
-    						System.out.println("Correct!");
+    						System.out.println("Correcto!");
     						return true;
     					}
-    					System.out.println("Incorrect");
+    					System.out.println("Incorrecto");
     					this.frame.clearValor(row, col);
     				}
     				return false;
     			} else {
-    				System.out.println("Initial value or already solved");
+    				System.out.println("Valor Inicial o previamente resuelto");
     			}
     		}
     	}
     	return true;
     }
-    
+
+    /**
+     *
+     * @param fila
+     * @param columna
+     * @param valor
+     * @return
+     */
     public boolean setValor(int fila, int columna, int valor){
         Integer [] a= new Integer [2];
         a[0]=fila;
@@ -85,6 +97,10 @@ public class Tablero {
         }
     }
 
+    /**
+     *
+     * @throws ListaVaciaException
+     */
     public void deshacer () throws ListaVaciaException
     {
         try{
@@ -106,6 +122,14 @@ public class Tablero {
         }
     }
 
+    /**
+     * Limpia la casilla [fila][columna] llamando a casilla.reiniciar
+     *
+     * <p>Si la casilla fue inicializada por el mismo juego no se puede borrar</p>
+     *
+     * @param fila de la casilla a limpiar
+     * @param columna de la casilla a limpiar
+     */
     public void clearValor(int fila, int columna){
         if(this.matriz[fila][columna].isInicial()){
             this.frame.showMessage("Tramposo...", "No puedes borrar ese número!");
@@ -115,16 +139,26 @@ public class Tablero {
         }
     }
 
+    /**
+     * Revisa si el numero/valor que se esta introduciendo en le juego
+     * es consistente con las reglas del juego
+     *
+     * @param fila a revisar
+     * @param columna a revisar
+     * @return true si existe alguna inconsistencia
+     */
     public boolean inconsistencia(int fila,int columna) {
         for(int i=0;i<9;i++){
+            //revisa por columna si el valor ya existe
             if(matriz[fila][columna].getValor() == matriz[fila][i].getValor() && columna!=i){
                 return true;
             }
-
+            //revisa por fila si el valor ya existe
             else if (matriz[fila][columna].getValor() == matriz[i][columna].getValor() && fila!=i)	{
                 return true;
             }
-
+            //revisa si el valor existe en el sector que se quiere introducir
+            //inicio y fin son las banderas para saber que sector se revisara
             else {
                 int inicio = 0,
                         fin = 0;
@@ -178,7 +212,7 @@ public class Tablero {
                         fin = 6;
                     }
                 }
-
+                //revisar inconsistencia por sector
                 if(this.buscar(fila,columna,inicio,fin)){
                     return true;
                 }
@@ -187,10 +221,23 @@ public class Tablero {
         return false;
     }
 
+    /**
+     * Metodo utilizado por la funcion inconsistencia
+     *
+     * Recorrera el sector en el que se quiere comprobar la incosistencia
+     * a fin de saber si el valor existe en el sector
+     *
+     * @param fila
+     * @param columna
+     * @param inicio
+     * @param fin
+     * @return true si en el sector existe el valor a revisar
+     */
     public boolean buscar(int fila, int columna, int inicio, int fin){
+        int valor = this.matriz[fila][columna].getValor();
         for (int j=inicio;j<=inicio+2;j++) {
             for (int h=fin; h<=fin+2;h++) {
-                if (this.matriz[j][h].getValor() == this.matriz[fila][columna].getValor() && j!=fila && columna!=h)	{
+                if (this.matriz[j][h].getValor() == valor && j!=fila && columna!=h)	{
                     return true;
                 }
             }
@@ -198,6 +245,17 @@ public class Tablero {
         return false;
     }
 
+    /**
+     * Esta funcion se llama cada que se cambia el valor d euna casilla para
+     * saber si con ese movimiento se gano el juego
+     *
+     * Funciona recorriendo toda la matriz de 81 casillas
+     *
+     * Si no existe casilla en 0 o no utilizada y sin inconsistencia se gana
+     * el juego
+     *
+     * @return true cuando gana el juego
+     */
     public boolean gano(){
         for(int j=0;j<9;j++){
             for(int i=0;i<9;i++){
@@ -216,6 +274,9 @@ public class Tablero {
 
     }
 
+    /**
+     *
+     */
     public void imprime(){
         for(int i=0;i<9;i++)
         {
@@ -227,32 +288,68 @@ public class Tablero {
         }
     }
 
-    public int getValor(int x, int y){
-        return this.matriz[x][y].getValor();
+    /**
+     * @param fila de la casilla a consultar
+     * @param columna de la casilla a consultar
+     * @return el valor de la casilla consultada
+     */
+    public int getValor(int fila, int columna){
+        return this.matriz[fila][columna].getValor();
     }
 
-    public boolean getInicial(int x, int y){
-        return this.matriz[x][y].isInicial();
+    /**
+     *
+     * @param fila
+     * @param columna
+     * @return true si el valor es un valor inicializado por el
+     * juego y no por el jugador
+     */
+    public boolean getInicial(int fila, int columna){
+        return this.matriz[fila][columna].isInicial();
     }
 
-    public boolean getUtilizado(int x, int y){
-        return this.matriz[x][y].isUtilizado();
+    /**
+     *
+     * @param fila a consultar
+     * @param columna a consultar
+     * @return true si la casilla que se quiere editar esta utilizada
+     */
+    public boolean getUtilizado(int fila, int columna){
+        return this.matriz[fila][columna].isUtilizado();
     }
 
+    /**
+     * Vuelve a jugar el juego actual
+     *
+     * Se llama cuando se elije reiniciar
+     */
     public void rePlay(){
         this.Open(this.juego);
     }
 
-    public void Open(String direccion)
+    /**
+     * Abrir juego.
+     *
+     * Si no se escoje nombre regresa El cielo se caeeee
+     *
+     * Try catch para el buffer reader que abre el archivo
+     *
+     * Si ocurre un error pregunta por un juego
+     *
+     * Si no se introduce ningun juego se abre el juego default Juego 1
+     *
+     * @param nombre del juego que se quiere abrir
+     */
+    public void Open(String nombre)
     {
-        if(direccion.equalsIgnoreCase("") || direccion.equalsIgnoreCase("null")){
+        if(nombre.equalsIgnoreCase("") || nombre.equalsIgnoreCase("null")){
             System.out.println("El cielo se caeeee!!");
         }
         else{
             BufferedReader lector;
 
             try{
-                this.juego=direccion;
+                this.juego=nombre;
                 System.out.println("Juego Cargado: " + this.juego);
 
                 for(int i=0;i<9;i++){
@@ -261,7 +358,7 @@ public class Tablero {
                     }
                 }
 
-                lector=new BufferedReader(new FileReader("C:\\Sudoku\\"+direccion+".txt"));
+                lector=new BufferedReader(new FileReader("C:\\Sudoku\\"+nombre+".txt"));
                 String linea;
                 int fila,
                         columna,
@@ -303,31 +400,37 @@ public class Tablero {
         }
     }
 
+    /**
+     * Abre el juego ganador relacionado con el juego que se esta jugando
+     */
     public void ganador(){
-        this.Open("Ganador");
+        this.Open("Ganador" + juego);
     }
 
-    public void Save(String direccion)
+    /**
+     * Guarda el avance del juego
+     *
+     * @param nombre del juego que se va a guardar
+     */
+    public void Save(String nombre)
     {
         try
         {
-            PrintWriter escritor = new PrintWriter(new FileWriter("C:\\Sudoku\\"+direccion+".txt"));
+            PrintWriter escritor = new PrintWriter(new FileWriter("C:\\Sudoku\\"+nombre+".txt"));
             for(int i=0;i<9;i++){
                 for(int j=0;j<9;j++){
                     if(this.matriz[i][j].isUtilizado() && this.matriz[i][j].isInicial()){
                         escritor.println( i + "," + j + "," + this.getValor(i, j)  + ",1");
-                        //System.out.println( i + "," + j + "," + this.getValor(i, j)  + ",1");
                     }
 
                     else if(this.matriz[i][j].isUtilizado()){
-                        //System.out.println( i + "," + j + "," + this.getValor(i, j)  + ",0");
                         escritor.println( i + "," + j + "," + this.getValor(i, j)  + ",0");
                     }
                 }
             }
             escritor.close();
             this.frame.showMessage("Guardado", "El juego se guardo correctamente.");
-            System.out.println( "Juego Guardado: "+ direccion);
+            System.out.println( "Juego Guardado: "+ nombre);
 
         }
         catch(IOException e)
@@ -335,25 +438,20 @@ public class Tablero {
             this.frame.showMessage("Ocurrio un Error", (""+e));
         }
     }
-	/*
-	public static void main(String[]args)
-	{
-		Tablero tab = new Tablero();
-		tab.matriz[0][0].setValor(1);	tab.matriz[0][4].setValor(5);
-		tab.matriz[0][1].setValor(2);	tab.matriz[0][5].setValor(6);
-		tab.matriz[0][2].setValor(3);	tab.matriz[0][6].setValor(7);
-		tab.matriz[0][3].setValor(4);	tab.matriz[0][7].setValor(8);
-		tab.matriz[0][8].setValor(9);	tab.matriz[1][8].setValor(1);
-		System.out.println(tab.matriz[1][8].isUtilizado());
-		System.out.println(tab.matriz[1][2].isUtilizado());
-	}*/
 
+    /**
+     * @return conjunto de casillas que se esta utilizando
+     */
 	public Casilla[][] getMatriz() {
 		return matriz;
 	}
 
+    /**
+     * Cambia la matriz base
+     * TODO Falta un repaint PROBAR
+     * @param matriz conjunto de casillas
+     */
 	public void setMatriz(Casilla[][] matriz) {
 		this.matriz = matriz;
 	}
-
 }

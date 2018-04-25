@@ -23,7 +23,7 @@ public class Mouse  extends MouseAdapter{
                         "Escriba un numero del 1 al 9.");
                 try{
                     ///Huevos de Pascua
-                    if (xx.compareToIgnoreCase("Zuro") == 0 || xx.compareToIgnoreCase("Lafarga") == 0){
+                    if (xx.compareToIgnoreCase("Elias") == 0 || xx.compareToIgnoreCase("Lafarga") == 0){
                         this.frame.showMessage("Ganaste!!!", "Quien lo diria... xD");
                         this.frame.ganador();
                         valor = 0;
