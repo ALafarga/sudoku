@@ -5,13 +5,20 @@ import ListaEnlazada.ListaVaciaException;
 
 import ListaEnlazada.StackLE;
 
+/**
+ * Esta clase es la que hace todas las operaciones y procedimientos
+ * relacionados con el sudoku, asi como las comprobaciones de las
+ * reglas del juego
+ *
+ * Cuenta con un stack que lleva el registro de movimientos del juego
+ * el cual consta de la fila y columna que se modificaron.
+ */
 public class Tablero {
 
-    private Casilla[][] matriz;
-    private Ventana frame;
-    private String juego;
-    private StackLE<Integer[]> stack;
-    //private Integer [] a;
+    private Casilla[][] matriz; //conjunto de casillas
+    private Ventana frame;  //Ventana donde se usara el tablero
+    private String juego;   //Nombre del juego actual
+    private StackLE<Integer[]> stack;   //Guarda los pasos que se han hecho
 
     public Tablero(Ventana x){
         this.matriz = new Casilla [9][9];
@@ -31,6 +38,7 @@ public class Tablero {
     }
 
     /**
+     *
      *
      * @param tablero
      * @return
