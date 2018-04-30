@@ -37,7 +37,35 @@ public class Tablero {
 	 * @return
 	 * 
 	 */
-		
+	public boolean resolverH(Casilla[][] tablero) {
+		for (int row = 0; row < 9; row++) {
+			iter++;
+			for (int col = 0; col < 9; col++) {
+				System.out.print("Comprobando [" + row + "] [" + col + "]: ");
+				if (!matriz[row][col].isUtilizado() && !matriz[row][col].isInicial()) {
+					for (int k = 1; k <= 9; k++) {
+						System.out.print("pon a " + k + " ... ");
+						boolean valid = this.frame.setValor(row, col, k);
+						if(this.sudokuInterface != null){
+							this.sudokuInterface.updateCasilla(row, col, k);
+						}
+						if (valid && resolverH(tablero)) {
+							System.out.println("Correcto!");
+							System.out.println(iter);
+							return true;
+						}
+						System.out.println("Incorrecto");
+						this.frame.clearValor(row, col);
+					}
+					return false;
+				} else {
+					System.out.println("Valor Inicial o previamente resuelto");
+				}
+			}
+		}
+		return true;
+	}
+	
 	public boolean resolver(Casilla[][] tablero, int cRow, int cCol) {
 		for (int row = cRow; row < 9; row++) {
 			iter++;
@@ -52,6 +80,7 @@ public class Tablero {
 						}
 						if (valid && resolver(tablero, row, col)) {
 							System.out.println("Correcto!");
+							System.out.println(iter);
 							return true;
 						}
 						System.out.println("Incorrecto");
@@ -70,6 +99,7 @@ public class Tablero {
 	public void resolverOG(final Casilla[][] tablero, final int cRow, final int cCol) {
 		Thread thread = new Thread(){
 			public void run(){
+				//Tablero.this.resolverH(tablero);
 				Tablero.this.resolver(tablero, cRow, cCol);
 			}
 		};

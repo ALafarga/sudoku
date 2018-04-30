@@ -210,7 +210,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Agregar metodo parar
-				auto = false;
+				auto = true;
 			}
 		});
 
@@ -225,7 +225,9 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		exec.scheduleAtFixedRate(new Runnable() {
 		  @Override
 		  public void run() {
-		    Ventana.this.lienzo.repaint();
+			  if(Ventana.this.auto==true && !Ventana.this.tablero.gano()){
+				  Ventana.this.lienzo.repaint();
+			  }
 		  }
 		}, 0, 1, TimeUnit.SECONDS);
 		
@@ -233,7 +235,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void updateCasilla(int row, int col, int valor) {				
 				try {
-					TimeUnit.MILLISECONDS.sleep(100);
+					TimeUnit.MILLISECONDS.sleep(1);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -265,12 +267,14 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		}
 
 		if (b.getLabel().equals("Seleccionar Juego")) {
+			this.auto = false;
 			this.tablero.Open(String.valueOf(this.showGames()));
 			this.lienzo.enable();
 			this.lienzo.repaint();
 		}
 
 		if (b.getLabel().equals("Reiniciar Juego")) {
+			this.auto = false;
 			this.tablero.rePlay();
 			this.lienzo.enable();
 			this.lienzo.repaint();
