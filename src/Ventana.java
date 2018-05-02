@@ -269,8 +269,12 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void updateCasilla(int row, int col, int valor) {				
 				try {
+<<<<<<< HEAD
 					TimeUnit.MILLISECONDS.sleep(Ventana.this.msToWait);
 					//Ventana.this.lienzo.repaint();
+=======
+					TimeUnit.MILLISECONDS.sleep(500);
+>>>>>>> 28a92592b4b33f72626727da8455b4925d6f1f0e
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
