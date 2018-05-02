@@ -185,7 +185,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				auto = true;
-				tablero.resolver(tablero.getMatriz());
+				tablero.resolver(tablero.getMatriz(), 0, 0);
 			}
 		});
 

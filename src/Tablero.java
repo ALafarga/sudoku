@@ -43,15 +43,15 @@ public class Tablero {
      * @param tablero
      * @return
      */
-    public boolean resolver(Casilla[][] tablero){
-    	for(int row=0; row<9; row++){
-    		for(int col=0; col<9; col++){
+    public boolean resolver(Casilla[][] tablero, int cRow, int cCol){
+    	for(int row = cRow; row<9; row++){
+    		for(int col = cCol; col<9; col++){
     			System.out.print("Comprobando ["+row+"] ["+col+"]: ");
     			if(!matriz[row][col].isUtilizado() && !matriz[row][col].isInicial()){
-    				for(int k=0; k<=9; k++){
+    				for(int k=1; k<=9; k++){
     					System.out.print("pon a "+k+" ... ");
     					boolean valid = this.frame.setValor(row, col, k);
-    					if(valid && resolver(tablero)){
+    					if(valid && resolver(tablero, row, col)){
     						System.out.println("Correcto!");
     						return true;
     					}
@@ -63,6 +63,7 @@ public class Tablero {
     				System.out.println("Valor Inicial o previamente resuelto");
     			}
     		}
+    		cCol = 0;
     	}
     	return true;
     }
