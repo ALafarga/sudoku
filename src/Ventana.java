@@ -201,12 +201,8 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				auto = true;
-<<<<<<< HEAD
-				tablero.resolver(tablero.getMatriz(), 0, 0);
-=======
 				tablero.resolverOG(tablero.getMatriz(), 0, 0);
 				System.out.println(tablero.iter);
->>>>>>> be984e0b377fb554c0ed356d0519c41bf1755674
 			}
 		});
 
@@ -239,7 +235,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void updateCasilla(int row, int col, int valor) {				
 				try {
-					TimeUnit.MILLISECONDS.sleep(1);
+					TimeUnit.MILLISECONDS.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
