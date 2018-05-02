@@ -46,7 +46,7 @@ public class Tablero {
 					for (int k = 1; k <= 9; k++) {
 						System.out.print("pon a " + k + " ... ");
 						boolean valid = this.frame.setValor(row, col, k);
-						if(this.sudokuInterface != null){
+						if (this.sudokuInterface != null) {
 							this.sudokuInterface.updateCasilla(row, col, k);
 						}
 						if (valid && resolverH(tablero)) {
@@ -65,7 +65,7 @@ public class Tablero {
 		}
 		return true;
 	}
-	
+
 	public boolean resolver(Casilla[][] tablero, int cRow, int cCol) {
 		for (int row = cRow; row < 9; row++) {
 			iter++;
@@ -75,7 +75,7 @@ public class Tablero {
 					for (int k = 1; k <= 9; k++) {
 						System.out.print("pon a " + k + " ... ");
 						boolean valid = this.frame.setValor(row, col, k);
-						if(this.sudokuInterface != null){
+						if (this.sudokuInterface != null) {
 							this.sudokuInterface.updateCasilla(row, col, k);
 						}
 						if (valid && resolver(tablero, row, col)) {
@@ -91,15 +91,15 @@ public class Tablero {
 					System.out.println("Valor Inicial o previamente resuelto");
 				}
 			}
-			cCol=0;
+			cCol = 0;
 		}
 		return true;
 	}
-	
+
 	public void resolverOG(final Casilla[][] tablero, final int cRow, final int cCol) {
-		Thread thread = new Thread(){
-			public void run(){
-				//Tablero.this.resolverH(tablero);
+		Thread thread = new Thread() {
+			public void run() {
+				// Tablero.this.resolverH(tablero);
 				Tablero.this.resolver(tablero, cRow, cCol);
 			}
 		};
@@ -494,7 +494,7 @@ public class Tablero {
 	public void setMatriz(Casilla[][] matriz) {
 		this.matriz = matriz;
 	}
-	
+
 	public SudokuInterface getSudokuInterface() {
 		return sudokuInterface;
 	}

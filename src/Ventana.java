@@ -48,7 +48,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 //import com.sun.corba.se.spi.orbutil.fsm.Action;
 //import com.sun.corba.se.spi.orbutil.fsm.FSM;
@@ -66,6 +71,8 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 	private Tablero tablero;
 	private boolean auto = false;
 	private Thread solver;
+	private JSlider slider;
+	private int msToWait = 50;
 	
 
 	/**
@@ -153,6 +160,10 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 
 		Panel botonera1 = new Panel();
 		botonera1.setLayout(new GridLayout(1, 1)); // Boton deshacer
+		
+		Panel sliderBotonera = new Panel();
+		sliderBotonera.setLayout(new GridLayout(2,1));
+		
 
 		// Panel auxiliar que contiene los dos paneles de los botonoes
 		Panel aux = new Panel();
@@ -165,18 +176,41 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		Button deshacer = new Button("Deshacer");
 		Button resolver = new Button("Resolver");
 		Button parar = new Button("Parar");
-
+		this.slider= new JSlider(JSlider.HORIZONTAL,0, 10, 10);
+		this.slider.setPaintTicks(true);
+		this.slider.setMajorTickSpacing(5);
+		this.slider.setMinorTickSpacing(1);
+		this.slider.setPaintLabels(true);
+		this.slider.addChangeListener(new ChangeListener() {
+			public float maxWait = 5000;
+			public float minWait = 10;
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				float speed = Ventana.this.slider.getValue();
+				if(speed <= 0){
+					Ventana.this.msToWait = (int) (5000.0f);
+				} else {
+					Ventana.this.msToWait = (int) (5000.0f/(speed*10));
+				}
+				
+			}
+		});
 		botonera.add(selectJ);
 		botonera.add(reloadJ);
 		botonera.add(salvarJ);
 		botonera.add(cargarJ);
 		botonera.add(resolver);
 		botonera.add(parar);
+		sliderBotonera.add(this.slider);
+		
+		
+		//sliderBotonera.add(new JLabel(this.sliderSpeed, SwingConstants.CENTER));
 
 		botonera1.add(deshacer);
 
 		aux.add(botonera1, BorderLayout.NORTH);
-		aux.add(botonera, BorderLayout.SOUTH);
+		aux.add(botonera, BorderLayout.CENTER);
+		aux.add(sliderBotonera, BorderLayout.SOUTH);
 
 		this.add(aux, BorderLayout.SOUTH);
 
@@ -226,7 +260,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		  @Override
 		  public void run() {
 			  if(Ventana.this.auto==true && !Ventana.this.tablero.gano()){
-				  Ventana.this.lienzo.repaint();
+				  //Ventana.this.lienzo.repaint();
 			  }
 		  }
 		}, 0, 1, TimeUnit.SECONDS);
@@ -235,7 +269,8 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void updateCasilla(int row, int col, int valor) {				
 				try {
-					TimeUnit.MILLISECONDS.sleep(1);
+					TimeUnit.MILLISECONDS.sleep(Ventana.this.msToWait);
+					//Ventana.this.lienzo.repaint();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -273,7 +308,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			this.lienzo.repaint();
 		}
 
-		if (b.getLabel().equals("Reiniciar Juego")) {
+		if (b.getLabel().equals("Reiniciar Juego")) {	
 			this.auto = false;
 			this.tablero.rePlay();
 			this.lienzo.enable();
