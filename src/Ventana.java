@@ -72,7 +72,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 	private boolean auto = false;
 	private Thread solver;
 	private JSlider slider;
-	private int msToWait = 50;
+	private int msToWait = 50	;
 	
 
 	/**
