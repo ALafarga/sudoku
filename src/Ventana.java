@@ -30,8 +30,23 @@
  * have any questions.
  */
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
@@ -40,8 +55,8 @@ import javax.swing.JOptionPane;
 //import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 /**
- *  Clase principal del proyecto
- *
+ * Clase principal del proyecto
+ * 
  * @author Arturo Lafarga
  * @author Miguel Elias Gonzalez
  */
@@ -50,18 +65,19 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 	private Canvas lienzo;
 	private Tablero tablero;
 	private boolean auto = false;
+	private Thread solver;
+	
 
-    /**
-     * Constructor
-     * Inicializa los cuadros/casillas
-     */
+	/**
+	 * Constructor Inicializa los cuadros/casillas
+	 */
 	public Ventana() {
 		this.tablero = new Tablero(this);
 		this.setTitle("Sudoku Extremo");
 		this.lienzo = new Canvas() {
 			public void paint(Graphics g) {
-				int aux = 150;  //Lineas de separacion general
-				int aux2 = 50;  //Lineas de separacion entre secciones
+				int aux = 150; // Lineas de separacion general
+				int aux2 = 50; // Lineas de separacion entre secciones
 
 				// Dibuja los cuadros
 				g.setColor(new Color(250, 255, 253));
@@ -133,12 +149,12 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 
 		// Agrega botones
 		Panel botonera = new Panel();
-		botonera.setLayout(new GridLayout(3, 2));   //Botones
+		botonera.setLayout(new GridLayout(3, 2)); // Botones
 
 		Panel botonera1 = new Panel();
-		botonera1.setLayout(new GridLayout(1, 1));  //Boton deshacer
+		botonera1.setLayout(new GridLayout(1, 1)); // Boton deshacer
 
-        //Panel auxiliar que contiene los dos paneles de los botonoes
+		// Panel auxiliar que contiene los dos paneles de los botonoes
 		Panel aux = new Panel();
 		aux.setLayout(new BorderLayout());
 
@@ -180,12 +196,17 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		selectJ.addActionListener(this);
 		reloadJ.addActionListener(this);
 		deshacer.addActionListener(this);
-		
+
 		resolver.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				auto = true;
+<<<<<<< HEAD
 				tablero.resolver(tablero.getMatriz(), 0, 0);
+=======
+				tablero.resolverOG(tablero.getMatriz(), 0, 0);
+				System.out.println(tablero.iter);
+>>>>>>> be984e0b377fb554c0ed356d0519c41bf1755674
 			}
 		});
 
@@ -193,7 +214,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Agregar metodo parar
-				auto = false;
+				auto = true;
 			}
 		});
 
@@ -203,7 +224,27 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 				System.exit(0);
 			}
 		});
-
+		
+		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		exec.scheduleAtFixedRate(new Runnable() {
+		  @Override
+		  public void run() {
+			  if(Ventana.this.auto==true && !Ventana.this.tablero.gano()){
+				  Ventana.this.lienzo.repaint();
+			  }
+		  }
+		}, 0, 1, TimeUnit.SECONDS);
+		
+		this.tablero.setSudokuInterface(new SudokuInterface() {
+			@Override
+			public void updateCasilla(int row, int col, int valor) {				
+				try {
+					TimeUnit.MILLISECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}// Ventana End
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -230,44 +271,52 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		}
 
 		if (b.getLabel().equals("Seleccionar Juego")) {
+			this.auto = false;
 			this.tablero.Open(String.valueOf(this.showGames()));
 			this.lienzo.enable();
 			this.lienzo.repaint();
 		}
 
 		if (b.getLabel().equals("Reiniciar Juego")) {
+			this.auto = false;
 			this.tablero.rePlay();
 			this.lienzo.enable();
 			this.lienzo.repaint();
 		}
 	}
 
-    /**
-     * Muestra un drop down list con los juegos disponibles
-     * @return Object JOptionPanel
-     */
+	/**
+	 * Muestra un drop down list con los juegos disponibles
+	 * 
+	 * @return Object JOptionPanel
+	 */
 	public Object showGames() {
 		Object[] juegosdisponibles = { "Juego 1", "Juego 2", "Juego 3" };
 		Object juegoe = JOptionPane.showInputDialog(null, "Escoje un juego", "Cargar juego nuevo", JOptionPane.INFORMATION_MESSAGE, null, juegosdisponibles, juegosdisponibles[0]);
 		return juegoe;
 	}
 
-    /**
-     *  Metodo facilitador para mostrar mensajes
-     *
-     * @param title Titulo de la ventana de mensaje
-     * @param message Mensaje a mostrar
-     */
+	/**
+	 * Metodo facilitador para mostrar mensajes
+	 * 
+	 * @param title
+	 *            Titulo de la ventana de mensaje
+	 * @param message
+	 *            Mensaje a mostrar
+	 */
 	public void showMessage(String title, String message) {
 		JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
-    /**
-     * //////////////////////////////////////////////////////COMO SE LLAMA ESTO todo ////////
-     * Limpia el valor de la casilla
-     * @param fila de la casilla a limpiar
-     * @param columna de la casilla a limpiar
-     */
+	/**
+	 * //////////////////////////////////////////////////////COMO SE LLAMA ESTO
+	 * todo //////// Limpia el valor de la casilla
+	 * 
+	 * @param fila
+	 *            de la casilla a limpiar
+	 * @param columna
+	 *            de la casilla a limpiar
+	 */
 	public void clearValor(int fila, int columna) {
 		this.tablero.clearValor(fila, columna);
 		this.lienzo.repaint();
@@ -278,9 +327,9 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		this.lienzo.repaint();
 	}
 
-    /**
-     * Exit Game
-     */
+	/**
+	 * Exit Game
+	 */
 	public void extiGame() {
 		int z = JOptionPane.showConfirmDialog(this, "Desea salir del juego?", "Aviso", JOptionPane.YES_NO_OPTION);
 		if (z == 0) {
@@ -291,26 +340,29 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			this.lienzo.disable();
 		}
 	}
-
-    /**
-     * Recibe datos del mouse
-     *
-     * @param fila de la casilla a setear
-     * @param columna de la casilla a setear
-     * @param valor de la casilla a setear
-     * @return
-     */
+	
+	/**
+	 * Recibe datos del mouse
+	 * 
+	 * @param fila
+	 *            de la casilla a setear
+	 * @param columna
+	 *            de la casilla a setear
+	 * @param valor
+	 *            de la casilla a setear
+	 * @return
+	 */
 	public boolean setValor(int fila, int columna, int valor) {
 		if (this.tablero.setValor(fila, columna, valor)) {
 			this.lienzo.repaint();
 			if (this.tablero.gano()) {
 				int x = JOptionPane.showConfirmDialog(this, "Jugar Otro?", "Ganaste!", JOptionPane.YES_NO_OPTION);
 				if (x == 0) {
-					this.tablero.Open(String.valueOf(this.showGames())); // Carga
-																			// juego
-																			// escogido
-																			// por
-																			// el
+					this.tablero.Open(String.valueOf(this.showGames())); // Carga//
+																			// juego//
+																			// escogido//
+																			// por//
+																			// el//
 																			// usuario.
 					this.lienzo.repaint();
 				}
@@ -383,4 +435,5 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 	public void windowOpened(WindowEvent arg0) {
 
 	}
+
 }
