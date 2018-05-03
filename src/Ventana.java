@@ -175,7 +175,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		Button reloadJ = new Button("Reiniciar Juego");
 		Button deshacer = new Button("Deshacer");
 		Button resolver = new Button("Resolver");
-		Button parar = new Button("Parar");
+		Button hint = new Button("Hint");
 		this.slider= new JSlider(JSlider.HORIZONTAL,0, 10, 10);
 		this.slider.setPaintTicks(true);
 		this.slider.setMajorTickSpacing(5);
@@ -200,7 +200,7 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 		botonera.add(salvarJ);
 		botonera.add(cargarJ);
 		botonera.add(resolver);
-		botonera.add(parar);
+		botonera.add(hint);
 		sliderBotonera.add(this.slider);
 		
 		
@@ -240,11 +240,13 @@ public class Ventana extends Frame implements WindowListener, ActionListener {
 			}
 		});
 
-		parar.addActionListener(new ActionListener() {
+		hint.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Agregar metodo parar
+				// Agregar metodo hint
 				auto = true;
+				tablero.hint();
+
 			}
 		});
 

@@ -14,7 +14,8 @@ public class Tablero {
 	private StackLE<Integer[]> stack;
 	public int iter;
 	private SudokuInterface sudokuInterface;
-
+	private Random random = new Random();
+	private boolean message = true;
 	// private Integer [] a;
 
 	public Tablero(Ventana x) {
@@ -106,6 +107,58 @@ public class Tablero {
 		thread.start();
 	}
 
+	public void hint(){
+		int randLine = random.nextInt(82);
+		BufferedReader lector;
+
+		try {
+			lector = new BufferedReader(new FileReader("C:\\Sudoku\\Ganador" + this.juego + ".txt"));
+			String linea = null;
+			int fila, columna, valor, tmp = 1;
+			boolean inicial, next = true;
+
+			StringTokenizer st;
+
+			this.message = false;	//no mostrar mensaje cuando linea random es inicial
+
+			for(int i = 0; i < randLine; i++){
+				linea = lector.readLine();
+			}
+
+			while(tmp == 1 && next){
+				st = new StringTokenizer(linea, ",");
+				fila = Integer.parseInt(st.nextToken());
+				columna = Integer.parseInt(st.nextToken());
+				valor = Integer.parseInt(st.nextToken());
+				tmp = Integer.parseInt(st.nextToken());
+				if(frame.setValor(fila, columna, valor)){
+//					if (this.sudokuInterface != null) {
+//						this.sudokuInterface.updateCasilla(fila, columna, valor);
+//					}
+					next = false;
+					this.message = true;
+				}
+				linea = lector.readLine();
+				if(linea == null){
+					lector.close();
+					lector = new BufferedReader(new FileReader("C:\\Sudoku\\Ganador" + this.juego + ".txt"));
+					linea = lector.readLine();
+				}
+			}
+			lector.close();
+		} catch (IOException e) {
+			this.frame.showMessage("Ocurrio un Error", ("" + e));
+			String archivo = String.valueOf(this.frame.showGames());
+
+			if ((archivo.equalsIgnoreCase("null")) || archivo.equalsIgnoreCase("")) {
+				this.Open("Juego 1");
+
+			} else {
+				this.Open(archivo);
+			}
+		}
+	}
+
 	/**
 	 * 
 	 * @param fila
@@ -118,7 +171,9 @@ public class Tablero {
 		a[0] = fila;
 		a[1] = columna;
 		if (matriz[fila][columna].isInicial()) {
-			this.frame.showMessage("Tramposo", "No puedes cambiar éste numero...");
+			if (message){
+				this.frame.showMessage("Tramposo", "No puedes cambiar éste numero...");
+			}
 			return true;
 		}
 
